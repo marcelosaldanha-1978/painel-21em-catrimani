@@ -17,6 +17,7 @@
   --bg:#151912; --panel:#1D221A; --ink:#E6EADF; --muted:#9BA493; --line:#343B2F; --accent:#A9BF73; --accent-soft:#2B3420;
   --crit:#F08C74; --crit-soft:#3F211A; --warn:#E6B45C; --warn-soft:#3A2D14; --ok:#7FC596; --ok-soft:#1C3325; --info:#8DB6DA; --info-soft:#1C2B38; color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;margin:0}
 .wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:grid;gap:20px}
 h1,h2,h3{font-family:var(--f-disp);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
@@ -205,11 +206,11 @@ function render(){
   document.getElementById('fonte').textContent=D.fonte;
   document.getElementById('refp').textContent=DT(D.ref_prazo);
   const s=D.sit_exec, t=D.sit_exec_teto, ca=D.cadeia, ex=D.exec;
-  const n7=D.ncs.filter(n=>n.sit==='VENCE EM ATÉ 7 DIAS'&&n.teto>0.005).length;
+  const n7=D.ncs.filter(n=>n.sit==='VENCE EM ATÉ 7 DIAS'&&n.saldo>0.005).length, n7t=D.ncs.filter(n=>n.sit==='VENCE EM ATÉ 7 DIAS'&&n.teto>0.005).length;
   const venc=D.ncs.filter(n=>n.sit==='VENCIDO'&&n.saldo>0.005);
   const ret=ca.retido['160539']+ca.retido['160504']+ca.retido['160073'];
   document.getElementById('act').innerHTML=[
-    ['warn','Vence em até 7 dias',s['VENCE EM ATÉ 7 DIAS']||0,`teto ${MIL(t['VENCE EM ATÉ 7 DIAS']||0)} · ${n7} NC nas executoras`],
+    ['warn','Vence em até 7 dias',s['VENCE EM ATÉ 7 DIAS']||0,`${n7} NC com saldo · teto ${MIL(t['VENCE EM ATÉ 7 DIAS']||0)} em ${n7t} NC`],
     ['crit','Prazo vencido com saldo',s['VENCIDO']||0,`${venc.length} NC · recolher ou pedir prorrogação`],
     ['info','Empenho imediato (sem data)',s['EMPENHO IMEDIATO']||0,'NC com ordem de empenho imediato'],
     ['ok','Retido nos gestores',ret,`COTER ${MIL(ca.retido['160539'])} · COEx ${MIL(ca.retido['160504'])}`]
