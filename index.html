@@ -4,97 +4,136 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: faixa de ação no topo → cadeia do recurso → abas de trabalho (NC, UG, gestores, pendências). Leitura de cima para baixo = do urgente ao detalhe. */
+/* Layout: barra fixa (posição, atalhos, tamanho do texto) → ação imediata → números → cadeia → abas de trabalho com filtros e tabela de cabeçalho fixo. */
 :root{
-  --bg:#EEF0EA; --panel:#FAFBF7; --ink:#1B2119; --muted:#5C6557; --line:#D5DACD; --accent:#4B5E26; --accent-soft:#E1E7D2;
+  --bg:#EEF0EA; --panel:#FAFBF7; --ink:#1B2119; --muted:#5C6557; --line:#D5DACD; --accent:#4B5E26; --accent-soft:#E1E7D2; --hover:#F1F4EA;
   --crit:#A8321F; --crit-soft:#F6DDD6; --warn:#A86400; --warn-soft:#F8E8CC; --ok:#2F6B45; --ok-soft:#D9ECDF; --info:#34597A; --info-soft:#DCE6EF;
   --f-disp:"Barlow Condensed","Arial Narrow",Arial,sans-serif; --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --f-num:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --fs:14px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#151912; --panel:#1D221A; --ink:#E6EADF; --muted:#9BA493; --line:#343B2F; --accent:#A9BF73; --accent-soft:#2B3420;
+  --bg:#151912; --panel:#1D221A; --ink:#E6EADF; --muted:#9BA493; --line:#343B2F; --accent:#A9BF73; --accent-soft:#2B3420; --hover:#252B21;
   --crit:#F08C74; --crit-soft:#3F211A; --warn:#E6B45C; --warn-soft:#3A2D14; --ok:#7FC596; --ok-soft:#1C3325; --info:#8DB6DA; --info-soft:#1C2B38; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#151912; --panel:#1D221A; --ink:#E6EADF; --muted:#9BA493; --line:#343B2F; --accent:#A9BF73; --accent-soft:#2B3420;
+  --bg:#151912; --panel:#1D221A; --ink:#E6EADF; --muted:#9BA493; --line:#343B2F; --accent:#A9BF73; --accent-soft:#2B3420; --hover:#252B21;
   --crit:#F08C74; --crit-soft:#3F211A; --warn:#E6B45C; --warn-soft:#3A2D14; --ok:#7FC596; --ok-soft:#1C3325; --info:#8DB6DA; --info-soft:#1C2B38; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;margin:0}
-.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:grid;gap:20px}
-h1,h2,h3{font-family:var(--f-disp);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
+html{font-size:var(--fs)}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.45;margin:0}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:16px;padding-block:0 40px;display:grid;gap:22px}
+.big .wrap{max-width:1600px}
+h1,h2{font-family:var(--f-disp);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
 h1{font-size:2rem;line-height:1.05}
-h2{font-size:1.35rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h2{font-size:1.3rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
 .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
-header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:12px}
-header .id{display:grid;gap:4px}
-header .scope{font-family:var(--f-num);font-size:.78rem;color:var(--muted)}
-.pos{display:grid;gap:2px;text-align:right;font-size:.8rem}
+/* barra fixa */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.bar .id{display:grid;gap:2px;min-width:0}
+.bar .scope{font-family:var(--f-num);font-size:.75rem;color:var(--muted)}
+.bar nav{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.bar nav a{font:600 .8rem var(--f-body);color:var(--ink);text-decoration:none;padding:4px 8px;border-radius:4px}
+.bar nav a:hover{background:var(--accent-soft)}
+.pos{display:grid;gap:1px;text-align:right;font-size:.78rem}
 .pos b{font-family:var(--f-num);font-weight:500}
-section{display:grid;gap:12px;min-width:0}
+.tools{display:flex;gap:4px;align-items:center}
+.btn{font:600 .78rem var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+section{display:grid;gap:12px;min-width:0;scroll-margin-top:90px}
+[role=tabpanel],.dock,.dock>*{min-width:0}
+.hc{display:none!important}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
 /* faixa de ação */
-.act{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.act .card{border-left:6px solid var(--line);background:var(--panel);border-radius:4px;padding:12px 14px;display:grid;gap:4px;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-.act .card.crit{border-left-color:var(--crit)} .act .card.warn{border-left-color:var(--warn)} .act .card.info{border-left-color:var(--info)} .act .card.ok{border-left-color:var(--ok)}
-.act .v{font-family:var(--f-num);font-size:1.35rem;font-weight:500}
-.act .s{font-size:.8rem;color:var(--muted)}
-/* números-chave */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.act{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card{text-align:left;font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line);border-left:6px solid var(--line);background:var(--panel);border-radius:4px;padding:12px 14px;display:grid;gap:4px}
+.card:hover{background:var(--hover)}
+.card.crit{border-left-color:var(--crit)} .card.warn{border-left-color:var(--warn)} .card.inf{border-left-color:var(--info)} .card.ok{border-left-color:var(--ok)}
+.card .v{font-family:var(--f-num);font-size:1.4rem;font-weight:500}
+.card .s{font-size:.8rem;color:var(--muted)}
+.card .go{font-size:.72rem;color:var(--accent);font-weight:600}
+/* números */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border:1px solid var(--line);border-radius:6px;background:var(--panel)}
 .kpi{padding:12px 14px;display:grid;gap:2px;border-right:1px solid var(--line)}
 .kpi:last-child{border-right:0}
-.kpi .v{font-family:var(--f-num);font-size:1.05rem}
+.kpi .v{font-family:var(--f-num);font-size:1.1rem}
 .kpi .s{font-size:.75rem;color:var(--muted)}
 /* cadeia */
-.chain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch}
+.chain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .col{display:grid;gap:8px;align-content:start;min-width:0}
-.node{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:var(--bg);display:grid;gap:2px;position:relative}
-.node .t{font-family:var(--f-disp);font-weight:600;font-size:1.05rem}
+.node{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:var(--bg);display:grid;gap:2px;text-align:left;font:inherit;color:inherit}
+button.node{cursor:pointer} button.node:hover{outline:2px solid var(--accent-soft)}
+.node .t{font-family:var(--f-disp);font-weight:600;font-size:1.08rem}
 .node .c{font-family:var(--f-num);font-size:.72rem;color:var(--muted)}
-.node .v{font-family:var(--f-num);font-size:.9rem}
+.node .v{font-family:var(--f-num);font-size:.92rem}
 .node .r{font-family:var(--f-num);font-size:.75rem}
 .node.hold{border-color:var(--warn);background:var(--warn-soft)}
 .arrow{font-size:.72rem;color:var(--muted);font-family:var(--f-num)}
 .meter{height:6px;background:var(--line);border-radius:3px;overflow:hidden;display:flex}
 .meter i{display:block;height:100%}
-@media (max-width:820px){.chain{grid-template-columns:1fr}}
-/* abas */
-.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line)}
-.tabs button{font:600 .85rem var(--f-body);background:none;border:0;border-bottom:3px solid transparent;padding:8px 12px;color:var(--muted);cursor:pointer}
+@media (max-width:860px){.chain{grid-template-columns:1fr}}
+/* abas + filtros fixos */
+.dock{position:sticky;top:var(--bar-h,64px);z-index:10;background:var(--bg);display:grid;gap:8px;padding-block:6px 8px}
+.tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line)}
+.tabs button{font:600 .88rem var(--f-body);background:none;border:0;border-bottom:3px solid transparent;padding:8px 12px;color:var(--muted);cursor:pointer}
+.tabs button .k{font-family:var(--f-num);font-size:.72rem;font-weight:500;margin-left:4px;color:var(--muted)}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
-.tabs button:focus-visible,.chip:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.chip{font:500 .78rem var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:4px 10px;cursor:pointer}
+.chip{font:500 .78rem var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+.chip .k{font-family:var(--f-num);opacity:.75;margin-left:3px}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
-select,input[type=search]{font:inherit;font-size:.85rem;padding:5px 8px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink);min-width:0}
-.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
-table{border-collapse:collapse;width:100%;font-size:.82rem}
+select,input[type=search]{font:inherit;font-size:.85rem;padding:5px 8px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink);min-width:0;max-width:100%}
+input[type=search]{width:16rem}
+.tog{display:flex;gap:6px;align-items:center;font-size:.8rem;color:var(--muted);cursor:pointer}
+.info{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:.82rem;color:var(--muted);align-items:center}
+.info b{font-family:var(--f-num);font-weight:500;color:var(--ink)}
+.info .sp{flex:1}
+/* tabelas: rolagem interna e cabeçalho fixo */
+.tbl{overflow:auto;max-height:calc(100vh - var(--bar-h,64px) - var(--dock-h,130px) - 24px);min-height:260px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.84rem}
 th,td{padding:7px 9px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--panel);white-space:nowrap;cursor:pointer}
+thead th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;position:sticky;top:0;z-index:2;background:var(--panel);white-space:nowrap;border-bottom:2px solid var(--line)}
+thead th.s{cursor:pointer;user-select:none} thead th.s:hover{color:var(--ink)}
+thead th .ar{font-size:.65rem;margin-left:3px}
+tfoot td{position:sticky;bottom:0;background:var(--panel);font-weight:600;border-top:2px solid var(--ink);border-bottom:0}
 td.n,th.n{text-align:right;font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
-tr:last-child td{border-bottom:0}
-tfoot td{font-weight:600;border-top:2px solid var(--ink)}
+td.nw{white-space:nowrap}
+td.n,th.n,td.nw,td.ug,td.num{width:1%}
+.big th,.big td{padding:6px 7px}
+.big .obj{min-width:18ch}
+.obj{min-width:18ch}
+tbody tr:hover td{background:var(--hover)}
+tbody tr.clk{cursor:pointer}
+.ug b{font-weight:600} .ug small{display:block;font-family:var(--f-num);font-size:.7rem;color:var(--muted);white-space:nowrap}
+.stack{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.info .tl{display:flex;gap:6px;flex-wrap:wrap}
 .pill{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:3px;white-space:nowrap}
 .p-VENCIDO{background:var(--crit-soft);color:var(--crit)}
 .p-VENCE7{background:var(--warn-soft);color:var(--warn)}
 .p-VENCE30{background:var(--info-soft);color:var(--info)}
 .p-IMEDIATO{background:var(--accent-soft);color:var(--accent)}
 .p-SEM{background:var(--line);color:var(--muted)}
-.conf{font-size:.7rem;font-family:var(--f-num)}
-.conf.x{color:var(--ok)} .conf.e{color:var(--muted)}
-.obj{max-width:46ch;min-width:28ch;color:var(--muted);font-size:.76rem}
+.tag{display:inline-block;font:500 .64rem var(--f-num);padding:0 4px;border-radius:2px;margin-left:4px;vertical-align:1px}
+.tag.x{background:var(--ok-soft);color:var(--ok)} .tag.e{background:var(--line);color:var(--muted)} .tag.t{background:var(--warn-soft);color:var(--warn)}
+.obj{min-width:24ch;color:var(--muted);font-size:.78rem}
 .obj span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.tog{display:flex;gap:6px;align-items:center;font-size:.8rem;color:var(--muted)}
-.rc-sum{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:.82rem;color:var(--muted)}
-.rc-sum b{font-family:var(--f-num);font-weight:500;color:var(--ink)}
-tr.dhead td{background:var(--bg);font-family:var(--f-disp);font-weight:600;font-size:.9rem;letter-spacing:.03em;color:var(--accent);padding-block:5px}
+tr.open .obj span{display:block;-webkit-line-clamp:unset;color:var(--ink)}
+tr.dhead td{background:var(--bg);font-family:var(--f-disp);font-weight:600;font-size:.92rem;letter-spacing:.03em;color:var(--accent);padding-block:5px;position:sticky;top:31px;z-index:1}
 td.neg{color:var(--crit)}
-.mini{display:flex;height:8px;width:120px;border-radius:2px;overflow:hidden;background:var(--line)}
+.empty td{padding:28px;text-align:center;color:var(--muted)}
+.mini{display:flex;height:9px;width:100px;border-radius:2px;overflow:hidden;background:var(--line)}
 .mini i{display:block;height:100%}
-.note{font-size:.78rem;color:var(--muted);max-width:95ch}
+.lnk{font:600 .74rem var(--f-body);color:var(--accent);background:none;border:1px solid var(--accent-soft);border-radius:3px;padding:1px 6px;cursor:pointer;white-space:nowrap}
+.lnk:hover{background:var(--accent-soft)}
+.note{font-size:.78rem;color:var(--muted);max-width:100ch;margin:0}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.75rem;color:var(--muted)}
 .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:4px;font-size:.85rem;z-index:50}
 .err{padding:24px;border:1px dashed var(--crit);color:var(--crit);border-radius:6px}
+@media (max-width:700px){.bar nav{display:none} .pos{text-align:left} input[type=search]{width:100%} .tbl{max-height:none}}
 @media (prefers-reduced-motion:no-preference){.tabs button{transition:border-color .15s}}
 </style>
 </head><body>
@@ -102,83 +141,83 @@ td.neg{color:var(--crit)}
 
 
 <div class="wrap">
-  <header>
+  <div class="bar" id="bar">
     <div class="id">
       <span class="lbl">D10 · Finanças · Op CATRIMANI II</span>
       <h1>Situação dos créditos da operação</h1>
-      <span class="scope" id="scope">AO 21EM · PTRES 251050 · PO 0003 (CHOC/EMCFA)</span>
+      <span class="scope">AO 21EM · PTRES 251050 · PO 0003 (CHOC/EMCFA)</span>
     </div>
-    <div class="pos"><span class="lbl">Posição</span><b id="pos">carregando…</b><span class="muted" id="ger"></span></div>
-  </header>
+    <nav aria-label="Atalhos"><a href="#s-acao">Ação imediata</a><a href="#s-num">Números</a><a href="#s-cad">Cadeia</a><a href="#s-det">Detalhe</a></nav>
+    <div class="tools">
+      <div class="pos"><span class="lbl">Posição</span><b id="pos">carregando…</b><span class="muted" id="ger"></span></div>
+      <button class="btn" id="b-proj" aria-pressed="false" title="Aumenta o texto para projetar">Modo projeção</button>
+    </div>
+  </div>
 
-  <section aria-labelledby="h-acao">
+  <section id="s-acao" aria-labelledby="h-acao">
     <h2 id="h-acao">Ação imediata</h2>
     <div class="act" id="act"></div>
   </section>
 
-  <section aria-labelledby="h-num">
+  <section id="s-num" aria-labelledby="h-num">
     <h2 id="h-num">Números da operação</h2>
     <div class="kpis" id="kpis"></div>
   </section>
 
-  <section aria-labelledby="h-cad">
+  <section id="s-cad" aria-labelledby="h-cad">
     <h2 id="h-cad">Cadeia do recurso</h2>
     <div class="panel"><div class="chain" id="chain"></div>
-      <p class="note" style="margin:12px 0 0">Valores de provisão/destaque recebidos em cada elo. Em amarelo, crédito ainda não descentralizado pelo gestor. As executoras estão agrupadas: área do CMA, aquisição centralizada (COEx/COLOG) e outras UG de fora do CMA que recebem crédito da operação.</p>
+      <p class="note" style="margin-top:12px">Provisão ou destaque recebido em cada elo. Em amarelo, crédito que o gestor ainda não descentralizou; clique nele para ver as NC retidas. Clique num grupo de executoras para abrir a lista de UG.</p>
     </div>
   </section>
 
-  <section aria-labelledby="h-det">
+  <section id="s-det" aria-labelledby="h-det">
     <h2 id="h-det">Detalhe</h2>
-    <div class="tabs" role="tablist" id="tabs">
-      <button role="tab" id="t-nc" aria-selected="true" data-p="p-nc">Saldo por NC</button>
-      <button role="tab" id="t-rc" aria-selected="false" data-p="p-rc">Créditos recebidos</button>
-      <button role="tab" id="t-ug" aria-selected="false" data-p="p-ug">Executoras</button>
-      <button role="tab" id="t-gs" aria-selected="false" data-p="p-gs">Retido nos gestores</button>
-      <button role="tab" id="t-pd" aria-selected="false" data-p="p-pd">Pendências de vínculo</button>
-      <button role="tab" id="t-mt" aria-selected="false" data-p="p-mt">Método</button>
-    </div>
-
-    <div id="p-nc" role="tabpanel" style="display:grid;gap:10px">
-      <div class="filters">
+    <div class="dock" id="dock">
+      <div class="tabs" role="tablist" id="tabs">
+        <button role="tab" id="t-nc" aria-selected="true" aria-controls="p-nc" data-p="p-nc">Saldo por NC</button>
+        <button role="tab" id="t-rc" aria-selected="false" aria-controls="p-rc" data-p="p-rc">Créditos recebidos</button>
+        <button role="tab" id="t-ug" aria-selected="false" aria-controls="p-ug" data-p="p-ug">Executoras</button>
+        <button role="tab" id="t-gs" aria-selected="false" aria-controls="p-gs" data-p="p-gs">Retido nos gestores</button>
+        <button role="tab" id="t-pd" aria-selected="false" aria-controls="p-pd" data-p="p-pd">Pendências de vínculo</button>
+        <button role="tab" id="t-mt" aria-selected="false" aria-controls="p-mt" data-p="p-mt">Método</button>
+      </div>
+      <!-- filtros de cada aba (ficam no bloco fixo) -->
+      <div id="fl-nc" class="filters">
         <span id="sitchips" class="filters"></span>
         <select id="f-ug" aria-label="Filtrar por UG"><option value="">Todas as UG</option></select>
-        <select id="f-ramo" aria-label="Filtrar por ramo"><option value="">Todos os ramos</option><option value="OCS90001000">COTER (…1000)</option><option value="OCS90001001">COEx/COLOG (…1001)</option><option value="OCS90001002">DGO (…1002)</option></select>
-        <input type="search" id="f-q" placeholder="NC, ND ou objeto" aria-label="Buscar">
-        <label class="tog"><input type="checkbox" id="f-z"> incluir NC com saldo estimado zero (teto &gt; 0)</label>
+        <select id="f-ramo" aria-label="Filtrar por ramo"><option value="">Todos os ramos</option><option value="OCS90001000">COTER</option><option value="OCS90001001">COEx/COLOG</option><option value="OCS90001002">DGO</option></select>
+        <input type="search" id="f-q" placeholder="Buscar NC, ND ou objeto" aria-label="Buscar no saldo por NC">
+        <label class="tog"><input type="checkbox" id="f-z"> mostrar NC com saldo zero</label>
       </div>
-      <div class="tbl"><table id="tb-nc"></table></div>
-      <p class="note"><b>Saldo</b>: estimativa final por NC. <b>Teto</b>: valor da NC menos o empenho cujo histórico cita a NC e o recolhimento vinculado a ela — limite exato, o saldo real não passa disso. <b>Exato</b>: a UG·PI não tem empenho nem recolhimento sem vínculo, então saldo = teto.</p>
-    </div>
-    <div id="p-rc" role="tabpanel" hidden style="display:grid;gap:10px">
-      <div class="filters">
+      <div id="fl-rc" class="filters" hidden>
         <select id="r-ug" aria-label="Filtrar por UASG (OM)"><option value="">Todas as UASG (OM)</option></select>
         <span class="filters" id="r-per"></span>
-        <select id="r-ramo" aria-label="Filtrar por ramo"><option value="">Todos os ramos</option><option value="OCS90001000">COTER (…1000)</option><option value="OCS90001001">COEx/COLOG (…1001)</option><option value="OCS90001002">DGO (…1002)</option></select>
-        <input type="search" id="r-q" placeholder="NC, ND ou objeto" aria-label="Buscar nos créditos recebidos">
+        <select id="r-ramo" aria-label="Filtrar por ramo"><option value="">Todos os ramos</option><option value="OCS90001000">COTER</option><option value="OCS90001001">COEx/COLOG</option><option value="OCS90001002">DGO</option></select>
+        <input type="search" id="r-q" placeholder="Buscar NC, ND ou objeto" aria-label="Buscar nos créditos recebidos">
         <label class="tog"><input type="checkbox" id="r-neg" checked> incluir recolhimentos/anulações</label>
       </div>
-      <div class="rc-sum" id="r-sum"></div>
-      <div class="tbl"><table id="tb-rc"></table></div>
-      <p class="note">Uma linha por NC recebida pela UASG no PTRES 251050, da mais recente para a mais antiga. <b>Valor</b>: provisão recebida (negativo = recolhimento ou anulação pelo gestor). <b>Empenhado</b>: empenho cujo histórico cita a NC. <b>Saldo</b>: saldo estimado da NC (ver aba Saldo por NC).</p>
+      <div id="fl-ug" class="filters" hidden>
+        <span class="filters" id="u-grp"></span>
+        <div class="legend"><span style="--c:var(--crit)">Vencido</span><span style="--c:var(--warn)">Vence ≤ 7 dias</span><span style="--c:var(--info)">Vence ≤ 30 dias</span><span style="--c:var(--accent)">Empenho imediato</span><span style="--c:var(--muted)">Sem prazo</span></div>
+      </div>
+      <div class="info" id="info"></div>
     </div>
-    <div id="p-ug" role="tabpanel" hidden style="display:grid;gap:10px">
-      <div class="legend"><span style="--c:var(--crit)">Vencido</span><span style="--c:var(--warn)">Vence ≤ 7 dias</span><span style="--c:var(--info)">Vence ≤ 30 dias</span><span style="--c:var(--accent)">Empenho imediato</span><span style="--c:var(--muted)">Sem prazo</span></div>
-      <div class="tbl"><table id="tb-ug"></table></div>
-    </div>
-    <div id="p-gs" role="tabpanel" hidden style="display:grid;gap:10px">
-      <div class="tbl"><table id="tb-gs"></table></div>
-      <p class="note">Crédito que o COTER e o COEx receberam do EME e ainda não descentralizaram. O saldo por NC do gestor é rateado por data (o gestor não empenha; o que sai é provisão concedida).</p>
-    </div>
-    <div id="p-pd" role="tabpanel" hidden style="display:grid;gap:10px">
-      <div class="tbl"><table id="tb-pd"></table></div>
-      <p class="note">Empenhos classificados na operação cujo histórico não cita uma NC válida da própria UG no PTRES 251050. É o que impede o saldo por NC de ser exato na UG. Vale confirmar com a UG a NC de origem.</p>
-    </div>
-    <div id="p-mt" role="tabpanel" hidden class="panel note" style="display:grid;gap:8px">
+
+    <div id="p-nc" role="tabpanel" aria-labelledby="t-nc"><div class="tbl"><table id="tb-nc"></table></div>
+      <p class="note" style="margin-top:8px"><b>Saldo</b>: estimativa por NC. <b>Teto</b>: valor da NC menos o empenho que cita a NC no histórico e o recolhimento vinculado a ela; o saldo real não passa disso. Marca <span class="tag x">exato</span> quando a UG não tem empenho nem recolhimento sem vínculo; <span class="tag t">trava</span> quando a NC proíbe alterar ND/UGR. Clique numa linha para ler o objeto inteiro.</p></div>
+    <div id="p-rc" role="tabpanel" aria-labelledby="t-rc" hidden><div class="tbl"><table id="tb-rc"></table></div>
+      <p class="note" style="margin-top:8px">Uma linha por NC recebida pela UASG no PTRES 251050, da mais recente para a mais antiga. <b>Valor</b> negativo = recolhimento ou anulação pelo gestor. <b>Empenhado</b>: empenho que cita a NC no histórico. <b>Saldo</b>: estimado (ver Saldo por NC). Clique numa linha para ler o objeto inteiro.</p></div>
+    <div id="p-ug" role="tabpanel" aria-labelledby="t-ug" hidden><div class="tbl"><table id="tb-ug"></table></div></div>
+    <div id="p-gs" role="tabpanel" aria-labelledby="t-gs" hidden><div class="tbl"><table id="tb-gs"></table></div>
+      <p class="note" style="margin-top:8px">Crédito que o COTER e o COEx receberam do EME e ainda não descentralizaram. O saldo por NC do gestor é rateado por data.</p></div>
+    <div id="p-pd" role="tabpanel" aria-labelledby="t-pd" hidden><div class="tbl"><table id="tb-pd"></table></div>
+      <p class="note" style="margin-top:8px">Empenhos da operação cujo histórico não cita NC válida da própria UG no PTRES 251050. Vale confirmar com a UG a NC de origem.</p></div>
+    <div id="p-mt" role="tabpanel" aria-labelledby="t-mt" hidden class="panel" style="display:grid;gap:8px;font-size:.85rem;max-width:110ch">
       <p style="margin:0"><b>Fonte.</b> <span id="fonte"></span></p>
       <p style="margin:0"><b>Escopo.</b> Ação 21EM, PTRES 251050 (PO 0003 – Atividades Operacionais CHOC/EMCFA). O PTRES 251049 (PO 0002) é da Op Sararé e está fora. Órgão 52121 (Comando do Exército).</p>
       <p style="margin:0"><b>Identidade por UG.</b> Recebido + destaque recebido − concedido − empenhado = disponível. Empenhado = empenhado a liquidar + liquidado. Fecha no centavo em todas as UG.</p>
-      <p style="margin:0"><b>Ramo pelo PI.</b> OCS90001000 = COTER (PTrab Op) · OCS90001001 = COEx/COLOG (PTrab Log) · OCS90001002 = DGO (concessionárias). A UGR 110407 aparece em todas as NC.</p>
+      <p style="margin:0"><b>Ramo pelo PI.</b> OCS90001000 = COTER (PTrab Op) · OCS90001001 = COEx/COLOG (PTrab Log) · OCS90001002 = DGO. A UGR 110407 aparece em todas as NC.</p>
       <p style="margin:0"><b>Saldo por NC.</b> O empenho cujo histórico cita a NC é abatido dela (exato). O empenho sem NC, o excedente sobre a NC citada e o recolhimento sem NC citada são rateados da NC mais antiga para a mais nova, com preferência pela mesma ND e respeitando a data do recolhimento. A soma por UG·PI fecha com o crédito disponível do TG.</p>
       <p style="margin:0"><b>Prazo.</b> Lido do objeto da NC (“EMPENHO/EMPENHAR/EMPH ATÉ…”, “PRAZO DE EMPENHO…”, “IMEDIATO/IMTO”). Referência: <span id="refp"></span>.</p>
     </div>
@@ -192,31 +231,39 @@ const MIL=v=>Math.abs(v)>=1e6?MI(v):'R$ '+(v/1e3).toLocaleString('pt-BR',{minimu
 const PCT=v=>(v*100).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const DT=s=>s?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(2,4):'—';
+const ndw=s=>esc(s).split('/').join('/<wbr>');   // várias ND quebram linha na barra
+const NRM=s=>String(s??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();   // busca sem acento
 const SIT=[['VENCIDO','Vencido','p-VENCIDO','--crit'],['VENCE EM ATÉ 7 DIAS','Vence ≤ 7 dias','p-VENCE7','--warn'],['VENCE EM ATÉ 30 DIAS','Vence ≤ 30 dias','p-VENCE30','--info'],['EMPENHO IMEDIATO','Empenho imediato','p-IMEDIATO','--accent'],['PRAZO > 30 DIAS','Prazo > 30 dias','p-SEM','--muted'],['SEM PRAZO NA NC','Sem prazo','p-SEM','--muted']];
+const SIT_ON=['VENCIDO','VENCE EM ATÉ 7 DIAS','VENCE EM ATÉ 30 DIAS','EMPENHO IMEDIATO','PRAZO > 30 DIAS','SEM PRAZO NA NC'];
 const sitOf=k=>SIT.find(s=>s[0]===k)||[k,k,'p-SEM','--muted'];
 const RAMO={OCS90001000:'COTER',OCS90001001:'COEx',OCS90001002:'DGO'};
-let D, fSit=new Set(['VENCIDO','VENCE EM ATÉ 7 DIAS','VENCE EM ATÉ 30 DIAS','EMPENHO IMEDIATO','SEM PRAZO NA NC']), sortNC={k:'prio',d:1};
+const GRP={CMA:'Área CMA',Centralizada:'Aquisição centralizada',Outras:'Fora do CMA'};
+const $=id=>document.getElementById(id);
+const sum=(a,f)=>a.reduce((s,x)=>s+(x[f]||0),0);
+let D, tab='p-nc', fSit=new Set(SIT_ON), sortNC={k:'prio',d:1}, sortUG={k:'disp',d:-1}, rPer='', uGrp='', last={};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 
 Promise.resolve(JSON.parse(document.getElementById('dados').textContent)).then(d=>{D=d;render()}).catch(e=>{
-  document.querySelector('.wrap').insertAdjacentHTML('beforeend','<div class="err">Não foi possível ler os dados do painel (data.json). Recarregue a página; se persistir, a última atualização não foi publicada.</div>')});
+  document.querySelector('.wrap').insertAdjacentHTML('beforeend','<div class="err">Não foi possível ler os dados do painel. Recarregue a página; se persistir, a última atualização não foi publicada.</div>')});
+
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function sizes(){requestAnimationFrame(fitAll);const b=$('bar').offsetHeight,d=$('dock').offsetHeight;document.documentElement.style.setProperty('--bar-h',b+'px');document.documentElement.style.setProperty('--dock-h',d+'px')}
+function proj(on){document.documentElement.style.setProperty('--fs',on?'17px':'14px');document.documentElement.classList.toggle('big',on);$('b-proj').setAttribute('aria-pressed',on);store.set('proj',on?'1':'0');sizes()}
 
 function render(){
-  document.getElementById('pos').textContent=D.posicao;
-  document.getElementById('ger').textContent='gerado em '+D.gerado;
-  document.getElementById('fonte').textContent=D.fonte;
-  document.getElementById('refp').textContent=DT(D.ref_prazo);
+  $('pos').textContent=D.posicao; $('ger').textContent='gerado em '+D.gerado; $('fonte').textContent=D.fonte; $('refp').textContent=DT(D.ref_prazo);
   const s=D.sit_exec, t=D.sit_exec_teto, ca=D.cadeia, ex=D.exec;
-  const n7=D.ncs.filter(n=>n.sit==='VENCE EM ATÉ 7 DIAS'&&n.saldo>0.005).length, n7t=D.ncs.filter(n=>n.sit==='VENCE EM ATÉ 7 DIAS'&&n.teto>0.005).length;
-  const venc=D.ncs.filter(n=>n.sit==='VENCIDO'&&n.saldo>0.005);
+  const cnt=(k,f)=>D.ncs.filter(n=>n.sit===k&&n[f]>0.005).length;
   const ret=ca.retido['160539']+ca.retido['160504']+ca.retido['160073'];
-  document.getElementById('act').innerHTML=[
-    ['warn','Vence em até 7 dias',s['VENCE EM ATÉ 7 DIAS']||0,`${n7} NC com saldo · teto ${MIL(t['VENCE EM ATÉ 7 DIAS']||0)} em ${n7t} NC`],
-    ['crit','Prazo vencido com saldo',s['VENCIDO']||0,`${venc.length} NC · recolher ou pedir prorrogação`],
-    ['info','Empenho imediato (sem data)',s['EMPENHO IMEDIATO']||0,'NC com ordem de empenho imediato'],
-    ['ok','Retido nos gestores',ret,`COTER ${MIL(ca.retido['160539'])} · COEx ${MIL(ca.retido['160504'])}`]
-  ].map(([c,l,v,x])=>`<div class="card ${c}"><span class="lbl">${l}</span><span class="v">${MIL(v)}</span><span class="s">${x}</span></div>`).join('');
+  $('act').innerHTML=[
+    ['warn','VENCE EM ATÉ 7 DIAS','Vence em até 7 dias',s['VENCE EM ATÉ 7 DIAS']||0,`${cnt('VENCE EM ATÉ 7 DIAS','saldo')} NC com saldo · teto ${MIL(t['VENCE EM ATÉ 7 DIAS']||0)}`],
+    ['crit','VENCIDO','Prazo vencido com saldo',s['VENCIDO']||0,`${cnt('VENCIDO','saldo')} NC · recolher ou pedir prorrogação`],
+    ['inf','EMPENHO IMEDIATO','Empenho imediato (sem data)',s['EMPENHO IMEDIATO']||0,`${cnt('EMPENHO IMEDIATO','saldo')} NC com ordem de empenho imediato`],
+    ['ok','GESTORES','Retido nos gestores',ret,`COTER ${MIL(ca.retido['160539'])} · COEx ${MIL(ca.retido['160504'])}`]
+  ].map(([c,k,l,v,x])=>`<button class="card ${c}" data-go="${k}"><span class="lbl">${l}</span><span class="v">${MIL(v)}</span><span class="s">${x}</span><span class="go">ver a lista →</span></button>`).join('');
+  document.querySelectorAll('#act .card').forEach(b=>b.onclick=()=>{const k=b.dataset.go; if(k==='GESTORES'){go('p-gs');return} fSit=new Set([k]); resetNC(false); go('p-nc')});
   const liq=ca.md_destaque-ca.eme_devolvido;
-  document.getElementById('kpis').innerHTML=[
+  $('kpis').innerHTML=[
     ['Destacado pelo MD (líquido)',liq,`destaque ${MI(ca.md_destaque)} − devolvido ${MIL(ca.eme_devolvido)}`],
     ['Descentralizado às executoras',ex.prov,`${D.ugs.length} UG com movimento`],
     ['Empenhado',ex.emp,`${PCT(ex.emp/ex.prov)} do descentralizado`],
@@ -224,78 +271,138 @@ function render(){
     ['Disponível nas executoras',ex.disp,'crédito ainda não empenhado'],
     ['Não empenhado na operação',ex.disp+ret,'executoras + retido nos gestores']
   ].map(([l,v,x])=>`<div class="kpi"><span class="lbl">${l}</span><span class="v">${MI(v)}</span><span class="s">${x}</span></div>`).join('');
-  // cadeia
   const g=grp=>D.ugs.filter(u=>u.grupo===grp);
-  const gsum=(arr,f)=>arr.reduce((a,u)=>a+u[f],0);
-  const gnode=(nome,arr)=>{const p=gsum(arr,'prov'),e=gsum(arr,'emp'),d=gsum(arr,'disp');return `<div class="node"><span class="t">${nome}</span><span class="c">${arr.length} UG</span><span class="v">${MI(p)}</span><div class="meter" title="empenhado ${PCT(e/p)}"><i style="width:${Math.min(100,e/p*100)}%;background:var(--accent)"></i></div><span class="r">empenhado ${PCT(e/p)} · disponível ${MIL(d)}</span></div>`};
-  const gest=(cod,nome)=>`<div class="node${ca.retido[cod]>0.005?' hold':''}"><span class="t">${nome}</span><span class="c">UG ${cod}</span><span class="v">${MI(ca.eme[cod])}</span><span class="r">descentralizou ${MI(ca.desc[cod])}${ca.retido[cod]>0.005?' · retido '+MIL(ca.retido[cod]):''}</span></div>`;
-  document.getElementById('chain').innerHTML=`
+  const gnode=(k,arr)=>{const p=sum(arr,'prov'),e=sum(arr,'emp'),d=sum(arr,'disp');return `<button class="node" data-grp="${k}"><span class="t">${GRP[k]}</span><span class="c">${arr.length} UG</span><span class="v">${MI(p)}</span><div class="meter" title="empenhado ${PCT(e/p)}"><i style="width:${Math.min(100,e/p*100)}%;background:var(--accent)"></i></div><span class="r">empenhado ${PCT(e/p)} · disponível ${MIL(d)}</span></button>`};
+  const gest=(cod,nome)=>`<button class="node${ca.retido[cod]>0.005?' hold':''}" data-gest="1"><span class="t">${nome}</span><span class="c">UG ${cod}</span><span class="v">${MI(ca.eme[cod])}</span><span class="r">descentralizou ${MI(ca.desc[cod])}${ca.retido[cod]>0.005?' · retido '+MIL(ca.retido[cod]):''}</span></button>`;
+  $('chain').innerHTML=`
    <div class="col"><span class="lbl">Ministério da Defesa</span><div class="node"><span class="t">MD · DEORF</span><span class="c">UG 110407 · destaque</span><span class="v">${MI(ca.md_destaque)}</span><span class="r">devolvido pelo EME ${MIL(ca.eme_devolvido)}</span></div></div>
    <div class="col"><span class="lbl">Setoriais do EB</span><div class="node"><span class="t">DCont</span><span class="c">UG 160075 · setorial financeira</span><span class="v">${MI(ca.dcont_eme)}</span><span class="r">provisão ao EME</span></div><div class="node"><span class="t">EME</span><span class="c">UG 160087 · setorial orçamentária</span><span class="v">${MI(ca.eme['160539']+ca.eme['160504']+ca.eme['160073'])}</span><span class="r">provisão aos gestores</span></div></div>
    <div class="col"><span class="lbl">Gestores</span>${gest('160539','COTER')}${gest('160504','COEx · COLOG')}${gest('160073','DGO')}<span class="arrow">+ ajuste cambial MEX ${MIL(ca.mex)} (CEBW)</span></div>
-   <div class="col"><span class="lbl">Executoras</span>${gnode('Área do CMA',g('CMA'))}${gnode('Aquisição centralizada',g('Centralizada'))}${gnode('Outras UG',g('Outras'))}</div>`;
+   <div class="col"><span class="lbl">Executoras</span>${gnode('CMA',g('CMA'))}${gnode('Centralizada',g('Centralizada'))}${gnode('Outras',g('Outras'))}</div>`;
+  document.querySelectorAll('#chain [data-gest]').forEach(b=>b.onclick=()=>go('p-gs'));
+  document.querySelectorAll('#chain [data-grp]').forEach(b=>b.onclick=()=>{uGrp=b.dataset.grp;initUG();go('p-ug')});
   // filtros
-  document.getElementById('sitchips').innerHTML=SIT.filter(x=>x[0]!=='PRAZO > 30 DIAS').map(x=>`<button class="chip" aria-pressed="${fSit.has(x[0])}" data-s="${x[0]}">${x[1]}</button>`).join('');
-  document.querySelectorAll('#sitchips .chip').forEach(b=>b.onclick=()=>{const k=b.dataset.s;fSit.has(k)?fSit.delete(k):fSit.add(k);b.setAttribute('aria-pressed',fSit.has(k));tNC()});
-  const us=[...new Map(D.ncs.map(n=>[n.ug,n.sigla])).entries()].sort((a,b)=>a[1].localeCompare(b[1]));
-  document.getElementById('f-ug').insertAdjacentHTML('beforeend',us.map(([u,s])=>`<option value="${u}">${esc(s)} (${u})</option>`).join(''));
-  ['f-ug','f-ramo','f-q','f-z'].forEach(id=>document.getElementById(id).addEventListener('input',tNC));
-  tNC(); tUG(); tGS(); tPD(); initRC();
-  const sel=b=>{document.querySelectorAll('#tabs button').forEach(x=>{x.setAttribute('aria-selected',x===b);document.getElementById(x.dataset.p).hidden=x!==b})};
-  document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>sel(b));
-  if(location.hash==='#recebidos') sel(document.getElementById('t-rc'));
+  const ugOpts=(arr)=>[...new Map(arr.map(n=>[n.ug,n.sigla])).entries()].sort((a,b)=>a[1].localeCompare(b[1],'pt')).map(([u,s])=>`<option value="${u}">${esc(s)} — ${u}</option>`).join('');
+  $('f-ug').insertAdjacentHTML('beforeend',ugOpts(D.ncs.filter(n=>n.saldo>0.005||n.teto>0.005)));
+  $('r-ug').insertAdjacentHTML('beforeend',ugOpts(D.recebidos||[]));
+  ['f-ug','f-ramo','f-q','f-z'].forEach(id=>$(id).addEventListener('input',tNC));
+  ['r-ug','r-ramo','r-q','r-neg'].forEach(id=>$(id).addEventListener('input',tRC));
+  $('r-per').innerHTML=[['','Todo o período'],['7','Últimos 7 dias'],['30','Últimos 30 dias']].map(([v,l])=>`<button class="chip" aria-pressed="${v===rPer}" data-v="${v}">${l}</button>`).join('');
+  document.querySelectorAll('#r-per .chip').forEach(b=>b.onclick=()=>{rPer=b.dataset.v;document.querySelectorAll('#r-per .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));tRC()});
+  document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>go(b.dataset.p));
+  // teclado nas abas
+  $('tabs').addEventListener('keydown',e=>{const bs=[...document.querySelectorAll('#tabs button')];const i=bs.findIndex(b=>b.dataset.p===tab);if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const j=(i+(e.key==='ArrowRight'?1:bs.length-1))%bs.length;go(bs[j].dataset.p);bs[j].focus();e.preventDefault()}});
+  // linha clicável abre o objeto inteiro
+  document.addEventListener('click',e=>{const tr=e.target.closest('tbody tr.clk');if(tr&&!e.target.closest('button'))tr.classList.toggle('open')});
+  $('b-proj').onclick=()=>proj($('b-proj').getAttribute('aria-pressed')!=='true');
+  proj(store.get('proj')==='1');
+  tNC(); tRC(); initUG(); tGS(); tPD();
+  const h=location.hash.replace('#','');
+  go({recebidos:'p-rc',executoras:'p-ug',gestores:'p-gs',pendencias:'p-pd',metodo:'p-mt'}[h]||'p-nc',false);
+  window.addEventListener('resize',sizes); sizes();
 }
+function go(p,scroll=true){
+  tab=p;
+  document.querySelectorAll('#tabs button').forEach(b=>{const on=b.dataset.p===p;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$(b.dataset.p).hidden=!on});
+  $('fl-nc').hidden=p!=='p-nc'; $('fl-rc').hidden=p!=='p-rc'; $('fl-ug').hidden=p!=='p-ug';
+  ({'p-nc':tNC,'p-rc':tRC,'p-ug':tUG,'p-gs':tGS,'p-pd':tPD,'p-mt':()=>setInfo('')})[p]();
+  sizes();
+  if(scroll) $('s-det').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+}
+function setInfo(html,extra=''){ $('info').innerHTML=html+(html?'<span class="sp"></span>':'')+extra; sizes() }
+function tools(kind){return `<span class="tl"><button class="btn" data-clear="${kind}">Limpar filtros</button><button class="btn" data-copy="${kind}" title="Copia a tabela filtrada para colar no Excel">Copiar tabela</button></span>`}
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-clear]'); if(c){({nc:()=>resetNC(true),rc:resetRC,ug:()=>{uGrp='';initUG()}})[c.dataset.clear]()}
+  const k=e.target.closest('[data-copy]'); if(k) copyTable(k.dataset.copy);
+});
+function copyTable(kind){
+  const tb={nc:'tb-nc',rc:'tb-rc',ug:'tb-ug',gs:'tb-gs',pd:'tb-pd'}[kind];
+  const rows=[...document.querySelectorAll('#'+tb+' tr')].filter(r=>!r.classList.contains('empty')&&!r.classList.contains('dhead'));
+  const txt=rows.map(r=>[...r.cells].map(c=>c.innerText.replace(/\s*\n\s*/g,' ').trim()).join('\t')).join('\n');
+  const ok=()=>toast('Tabela copiada: cole no Excel (Ctrl+V)');
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();let r=false;try{r=document.execCommand('copy')}catch(x){}ta.remove();toast(r?'Tabela copiada: cole no Excel (Ctrl+V)':'O navegador bloqueou a cópia: selecione a tabela com o mouse e copie')};
+  try{navigator.clipboard.writeText(txt).then(ok,fb)}catch(x){fb()}
+}
+const PRI={'tb-nc':{5:1,7:1,4:2,6:2,9:3,10:4},'tb-rc':{4:1,6:1,3:2,8:3,9:4},'tb-ug':{4:1,5:1,2:2,8:2,7:3},'tb-gs':{2:1,4:1,3:2,5:2,8:3},'tb-pd':{2:1,1:2,4:2,6:3}};
+function fit(id){
+  const tb=$(id); if(!tb) return; const box=tb.parentElement; if(!box.offsetParent) return;
+  const pri=PRI[id]||{}; const cells=[];
+  [...tb.rows].forEach(r=>{let c=0;[...r.cells].forEach(td=>{const sp=td.colSpan||1; td.classList.remove('hc'); if(sp===1&&pri[c]) cells.push([pri[c],td]); c+=sp})});
+  const max=Math.max(0,...Object.values(pri));
+  for(let lv=1; lv<=max && tb.scrollWidth>box.clientWidth+1; lv++) cells.forEach(([p,td])=>{if(p<=lv) td.classList.add('hc')});
+}
+function fitAll(){['tb-nc','tb-rc','tb-ug','tb-gs','tb-pd'].forEach(fit)}
+const emptyRow=(n,m)=>`<tr class="empty"><td colspan="${n}">${m}</td></tr>`;
+const ugCell=(sig,cod,extra)=>`<td class="ug nw"><b>${esc(sig)}</b><small>${cod}${extra?' · '+extra:''}</small></td>`;
+const arrow=(st,k)=>st.k===k?`<span class="ar">${st.d>0?'▲':'▼'}</span>`:'';
+/* ---------- Saldo por NC ---------- */
+function resetNC(all){ if(all) fSit=new Set(SIT_ON); $('f-ug').value='';$('f-ramo').value='';$('f-q').value='';$('f-z').checked=false; sortNC={k:'prio',d:1}; tNC() }
 const prio=n=>SIT.findIndex(s=>s[0]===n.sit);
 function tNC(){
-  const z=document.getElementById('f-z').checked, u=document.getElementById('f-ug').value, r=document.getElementById('f-ramo').value, q=document.getElementById('f-q').value.trim().toUpperCase();
-  let L=D.ncs.filter(n=>fSit.has(n.sit)&&(!u||n.ug===u)&&(!r||n.pi===r)&&(!q||(n.nc+' '+n.nd+' '+n.obj).toUpperCase().includes(q))&&(n.saldo>0.005||(z&&n.teto>0.005)));
-  const k=sortNC.k,d=sortNC.d;
-  L.sort((a,b)=>k==='prio'?(prio(a)-prio(b))||((a.prazo||'9')<(b.prazo||'9')?-1:(a.prazo||'9')>(b.prazo||'9')?1:0)||(b.saldo-a.saldo):(typeof a[k]==='number'?(a[k]-b[k])*d:String(a[k]).localeCompare(String(b[k]))*d));
-  const S=L.reduce((a,n)=>a+n.saldo,0),T=L.reduce((a,n)=>a+n.teto,0);
-  const hd=[['prio','Situação'],['prazo','Prazo'],['sigla','UG'],['nc','NC'],['emit','Emit.'],['nd','ND'],['pi','Ramo'],['val','Valor NC','n'],['vinc','Empenho vinculado','n'],['saldo','Saldo','n'],['teto','Teto','n'],['conf','Base'],['obj','Objeto da NC']];
-  document.getElementById('tb-nc').innerHTML=`<thead><tr>${hd.map(h=>`<th class="${h[2]||''}" data-k="${h[0]}">${h[1]}</th>`).join('')}</tr></thead><tbody>${L.map(n=>{const s=sitOf(n.sit);return `<tr><td><span class="pill ${s[2]}">${s[1]}</span></td><td class="num">${DT(n.prazo)}</td><td title="${esc(n.ug)}">${esc(n.sigla)}</td><td class="num">${esc(n.nc)}</td><td>${esc(n.emit)}</td><td class="num">${esc(n.nd)}</td><td>${RAMO[n.pi]||esc(n.pi)}</td><td class="n">${BRL(n.val)}</td><td class="n">${BRL(n.vinc)}</td><td class="n"><b>${BRL(n.saldo)}</b></td><td class="n">${BRL(n.teto)}</td><td><span class="conf ${n.conf==='EXATO'?'x':'e'}">${n.conf==='EXATO'?'exato':'estimado'}</span>${n.trava?' <span class="pill p-SEM" title="NC proíbe alterar ND/UGR">trava</span>':''}</td><td class="obj" title="${esc(n.obj)}"><span>${esc(n.obj)}</span></td></tr>`}).join('')}</tbody><tfoot><tr><td colspan="9">${L.length} NC</td><td class="n">${BRL(S)}</td><td class="n">${BRL(T)}</td><td colspan="2"></td></tr></tfoot>`;
-  document.querySelectorAll('#tb-nc th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortNC={k,d:sortNC.k===k?-sortNC.d:(['val','vinc','saldo','teto'].includes(k)?-1:1)};tNC()});
+  const z=$('f-z').checked,u=$('f-ug').value,r=$('f-ramo').value,q=NRM($('f-q').value.trim());
+  const base=D.ncs.filter(n=>(n.saldo>0.005||(z&&n.teto>0.005))&&(!u||n.ug===u)&&(!r||n.pi===r)&&(!q||NRM(n.nc+' '+n.nd+' '+n.obj+' '+n.sigla).includes(q)));
+  $('sitchips').innerHTML=SIT.filter(x=>base.some(n=>n.sit===x[0])||x[0]!=='PRAZO > 30 DIAS').map(x=>{const k=base.filter(n=>n.sit===x[0]).length;return `<button class="chip" aria-pressed="${fSit.has(x[0])}" data-s="${x[0]}">${x[1]}<span class="k">${k}</span></button>`}).join('');
+  document.querySelectorAll('#sitchips .chip').forEach(b=>b.onclick=()=>{const k=b.dataset.s;fSit.has(k)?fSit.delete(k):fSit.add(k);tNC()});
+  let L=base.filter(n=>fSit.has(n.sit));
+  const {k,d}=sortNC;
+  L.sort((a,b)=>k==='prio'?(prio(a)-prio(b))||((a.prazo||'9')<(b.prazo||'9')?-1:(a.prazo||'9')>(b.prazo||'9')?1:0)||(b.saldo-a.saldo):(typeof a[k]==='number'?(a[k]-b[k])*d:String(a[k]??'').localeCompare(String(b[k]??''),'pt')*d));
+  const hd=[['prio','Situação'],['prazo','Prazo'],['sigla','UG'],['nc','NC'],['nd','ND'],['emit','Origem'],['val','Valor NC','n'],['vinc','Empenhado','n'],['saldo','Saldo','n'],['teto','Teto','n'],['obj','Objeto da NC']];
+  const rows=L.map(n=>{const s=sitOf(n.sit);return `<tr class="clk"><td class="nw"><span class="pill ${s[2]}">${s[1]}</span></td><td class="num nw">${DT(n.prazo)}</td>${ugCell(n.sigla,n.ug)}<td class="num nw">${esc(n.nc)}</td><td class="num">${ndw(n.nd)}</td><td class="nw" title="PI ${esc(n.pi)}">${esc(n.emit)}</td><td class="n">${BRL(n.val)}</td><td class="n">${BRL(n.vinc)}</td><td class="n"><b>${BRL(n.saldo)}</b><br><span class="tag ${n.conf==='EXATO'?'x':'e'}">${n.conf==='EXATO'?'exato':'estimado'}</span>${n.trava?'<span class="tag t">trava</span>':''}</td><td class="n">${BRL(n.teto)}</td><td class="obj"><span>${esc(n.obj)}</span></td></tr>`}).join('');
+  $('tb-nc').innerHTML=`<thead><tr>${hd.map(h=>`<th class="s ${h[2]||''}" data-k="${h[0]}">${h[1]}${arrow(sortNC,h[0])}</th>`).join('')}</tr></thead><tbody>${rows||emptyRow(11,'Nenhuma NC com esses filtros. Use “Limpar filtros”.')}</tbody><tfoot><tr><td colspan="6">${L.length} NC</td><td class="n">${BRL(sum(L,'val'))}</td><td class="n">${BRL(sum(L,'vinc'))}</td><td class="n">${BRL(sum(L,'saldo'))}</td><td class="n">${BRL(sum(L,'teto'))}</td><td></td></tr></tfoot>`;
+  document.querySelectorAll('#tb-nc th.s').forEach(th=>th.onclick=()=>{const kk=th.dataset.k;sortNC={k:kk,d:sortNC.k===kk?-sortNC.d:(['val','vinc','saldo','teto'].includes(kk)?-1:1)};tNC()});
+  if(tab==='p-nc') setInfo(`<span><b>${L.length}</b> NC</span><span>Saldo <b>${BRL(sum(L,'saldo'))}</b></span><span>Teto <b>${BRL(sum(L,'teto'))}</b></span>`,tools('nc'));
+  fit('tb-nc');
+}
+/* ---------- Créditos recebidos ---------- */
+function resetRC(){ $('r-ug').value='';$('r-ramo').value='';$('r-q').value='';$('r-neg').checked=true; rPer=''; document.querySelectorAll('#r-per .chip').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v==='')); tRC() }
+function tRC(){
+  const u=$('r-ug').value,r=$('r-ramo').value,q=NRM($('r-q').value.trim()),neg=$('r-neg').checked;
+  const ref=new Date(D.ref_prazo+'T12:00:00'); const lim=rPer?new Date(ref.getTime()-Number(rPer)*864e5).toISOString().slice(0,10):'';
+  const L=(D.recebidos||[]).filter(x=>(!u||x.ug===u)&&(!r||x.pi.includes(r))&&(neg||x.val>0)&&(!lim||(x.data||'')>=lim)&&(!q||NRM(x.nc+' '+x.nd+' '+x.obj+' '+x.sigla).includes(q)));
+  const pos=L.filter(x=>x.val>0), ng=L.filter(x=>x.val<0);
+  let lastD='', rows='';
+  for(const x of L){
+    if(x.data!==lastD){lastD=x.data; const n=L.filter(y=>y.data===x.data); rows+=`<tr class="dhead"><td colspan="10">${DT(x.data)} · ${n.length} NC · ${BRL(sum(n,'val'))}</td></tr>`;}
+    const s=x.sit?sitOf(x.sit):null;
+    rows+=`<tr class="clk"><td class="num nw">${DT(x.data)}</td>${ugCell(x.sigla,x.ug)}<td class="num nw">${esc(x.nc)}${x.val<0?'<br><span class="pill p-VENCIDO">'+esc(x.tipo)+'</span>':''}</td><td class="num">${ndw(x.nd)}</td><td class="nw" title="PI ${esc(x.pi)}">${esc(x.emit)}</td><td class="n${x.val<0?' neg':''}">${BRL(x.val)}</td><td class="n">${x.vinc==null?'—':BRL(x.vinc)}</td><td class="n">${x.saldo==null?'—':'<b>'+BRL(x.saldo)+'</b>'}</td><td class="nw">${s?`<span class="pill ${s[2]}">${s[1]}</span><br><span class="num" style="font-size:.75rem">${DT(x.prazo)}</span>`:'—'}</td><td class="obj"><span>${esc(x.obj)}</span></td></tr>`;
+  }
+  $('tb-rc').innerHTML=`<thead><tr><th>Data</th><th>UASG (OM)</th><th>NC</th><th>ND</th><th>Origem</th><th class="n">Valor</th><th class="n">Empenhado</th><th class="n">Saldo</th><th>Prazo</th><th>Objeto da NC</th></tr></thead><tbody>${rows||emptyRow(10,'Nenhuma NC com esses filtros. Use “Limpar filtros”.')}</tbody><tfoot><tr><td colspan="5">${L.length} lançamentos</td><td class="n">${BRL(sum(L,'val'))}</td><td class="n">${BRL(sum(pos,'vinc'))}</td><td class="n">${BRL(sum(pos,'saldo'))}</td><td colspan="2"></td></tr></tfoot>`;
+  const ult=pos.length?pos[0].data:null;
+  if(tab==='p-rc') setInfo(`<span>Recebido <b>${BRL(sum(pos,'val'))}</b> em ${pos.length} NC</span>`+(neg?`<span>Recolhido <b>${BRL(sum(ng,'val'))}</b></span><span>Líquido <b>${BRL(sum(L,'val'))}</b></span>`:'')+`<span>Saldo <b>${BRL(sum(pos,'saldo'))}</b></span>`+(ult?`<span>Último recebimento <b>${DT(ult)}</b></span>`:''),tools('rc'));
+  fit('tb-rc');
+}
+/* ---------- Executoras ---------- */
+function initUG(){
+  $('u-grp').innerHTML=[['','Todas'],['CMA','Área CMA'],['Centralizada','Aquisição centralizada'],['Outras','Fora do CMA']].map(([v,l])=>`<button class="chip" aria-pressed="${v===uGrp}" data-g="${v}">${l}<span class="k">${v?D.ugs.filter(u=>u.grupo===v).length:D.ugs.length}</span></button>`).join('');
+  document.querySelectorAll('#u-grp .chip').forEach(b=>b.onclick=()=>{uGrp=b.dataset.g;initUG()});
+  tUG();
 }
 function tUG(){
-  const hd=`<thead><tr><th>UG</th><th>Grupo</th><th class="n">Recebido</th><th class="n">Empenhado</th><th class="n">% emp.</th><th class="n">Liquidado</th><th class="n">Pago</th><th class="n">Disponível</th><th>Prazo do disponível</th><th class="n">Empenho sem NC</th></tr></thead>`;
-  const rows=D.ugs.map(u=>{const tot=Object.values(u.sit).reduce((a,v)=>a+Math.max(v,0),0)||1;
+  const L=D.ugs.filter(u=>!uGrp||u.grupo===uGrp).map(u=>({...u,pe:u.prov?u.emp/u.prov:0}));
+  const {k,d}=sortUG; L.sort((a,b)=>typeof a[k]==='number'?(a[k]-b[k])*d:String(a[k]).localeCompare(String(b[k]),'pt')*d);
+  const hd=[['sigla','UG'],['prov','Recebido','n'],['emp','Empenhado','n'],['pe','% emp.','n'],['liq','Liquidado','n'],['pag','Pago','n'],['disp','Disponível','n'],['','Prazo do disponível'],['semvinc','Empenho sem NC','n'],['','Abrir']];
+  const rows=L.map(u=>{const tot=Object.values(u.sit).reduce((a,v)=>a+Math.max(v,0),0)||1;
     const bar=SIT.filter(s=>u.sit[s[0]]>0.005).map(s=>`<i style="width:${u.sit[s[0]]/tot*100}%;background:var(${s[3]})" title="${s[1]}: ${BRL(u.sit[s[0]])}"></i>`).join('');
-    return `<tr><td><b>${esc(u.sigla)}</b> <span class="muted num">${u.ug}</span></td><td>${u.grupo==='CMA'?'Área CMA':u.grupo==='Centralizada'?'Centralizada':'Fora do CMA'}</td><td class="n">${BRL(u.prov)}</td><td class="n">${BRL(u.emp)}</td><td class="n">${u.prov?PCT(u.emp/u.prov):'—'}</td><td class="n">${BRL(u.liq)}</td><td class="n">${BRL(u.pag)}</td><td class="n"><b>${BRL(u.disp)}</b></td><td>${u.disp>0.005?`<div class="mini">${bar}</div>`:''}</td><td class="n">${u.semvinc>0.005?BRL(u.semvinc):'—'}</td></tr>`}).join('');
-  const e=D.exec;
-  document.getElementById('tb-ug').innerHTML=hd+'<tbody>'+rows+`</tbody><tfoot><tr><td colspan="2">Total</td><td class="n">${BRL(e.prov)}</td><td class="n">${BRL(e.emp)}</td><td class="n">${PCT(e.emp/e.prov)}</td><td class="n">${BRL(e.liq)}</td><td class="n">${BRL(e.pag)}</td><td class="n">${BRL(e.disp)}</td><td></td><td class="n">${BRL(D.ugs.reduce((a,u)=>a+u.semvinc,0))}</td></tr></tfoot>`;
+    return `<tr>${ugCell(u.sigla,u.ug,GRP[u.grupo])}<td class="n">${BRL(u.prov)}</td><td class="n">${BRL(u.emp)}</td><td class="n">${u.prov?PCT(u.pe):'—'}</td><td class="n">${BRL(u.liq)}</td><td class="n">${BRL(u.pag)}</td><td class="n"><b>${BRL(u.disp)}</b></td><td>${u.disp>0.005?`<div class="mini" title="${SIT.filter(s=>u.sit[s[0]]>0.005).map(s=>s[1]+': '+BRL(u.sit[s[0]])).join(' · ')}">${bar}</div>`:''}</td><td class="n">${u.semvinc>0.005?BRL(u.semvinc):'—'}</td><td class="nw"><div class="stack"><button class="lnk" data-ugnc="${u.ug}">saldo</button><button class="lnk" data-ugrc="${u.ug}">créditos</button></div></td></tr>`}).join('');
+  $('tb-ug').innerHTML=`<thead><tr>${hd.map(h=>`<th class="${h[0]?'s ':''}${h[2]||''}" data-k="${h[0]}">${h[1]}${h[0]?arrow(sortUG,h[0]):''}</th>`).join('')}</tr></thead><tbody>${rows}</tbody><tfoot><tr><td>${L.length} UG</td><td class="n">${BRL(sum(L,'prov'))}</td><td class="n">${BRL(sum(L,'emp'))}</td><td class="n">${PCT(sum(L,'emp')/(sum(L,'prov')||1))}</td><td class="n">${BRL(sum(L,'liq'))}</td><td class="n">${BRL(sum(L,'pag'))}</td><td class="n">${BRL(sum(L,'disp'))}</td><td></td><td class="n">${BRL(sum(L,'semvinc'))}</td><td></td></tr></tfoot>`;
+  document.querySelectorAll('#tb-ug th.s').forEach(th=>th.onclick=()=>{const kk=th.dataset.k;sortUG={k:kk,d:sortUG.k===kk?-sortUG.d:(['sigla','grupo'].includes(kk)?1:-1)};tUG()});
+  document.querySelectorAll('[data-ugnc]').forEach(b=>b.onclick=()=>{resetNC(true);$('f-ug').value=b.dataset.ugnc;tNC();go('p-nc')});
+  document.querySelectorAll('[data-ugrc]').forEach(b=>b.onclick=()=>{resetRC();$('r-ug').value=b.dataset.ugrc;tRC();go('p-rc')});
+  if(tab==='p-ug') setInfo(`<span><b>${L.length}</b> UG</span><span>Disponível <b>${BRL(sum(L,'disp'))}</b></span><span>Clique em <b>saldo</b> ou <b>créditos</b> para abrir a UG nas outras abas</span>`,tools('ug'));
+  fit('tb-ug');
 }
+/* ---------- Gestores ---------- */
 function tGS(){
   const L=D.gestores.slice().sort((a,b)=>b.saldo-a.saldo);
-  document.getElementById('tb-gs').innerHTML=`<thead><tr><th>Gestor</th><th>NC recebida</th><th>ND</th><th>Ramo</th><th class="n">Valor</th><th class="n">Saldo retido</th><th>Prazo</th><th>Objeto</th></tr></thead><tbody>${L.map(n=>{const s=sitOf(n.sit);return `<tr><td><b>${esc(n.sigla)}</b></td><td class="num">${esc(n.nc)}</td><td class="num">${esc(n.nd)}</td><td>${RAMO[n.pi]||esc(n.pi)}</td><td class="n">${BRL(n.val)}</td><td class="n"><b>${BRL(n.saldo)}</b></td><td><span class="pill ${s[2]}">${s[1]}</span> <span class="num">${DT(n.prazo)}</span></td><td class="obj" title="${esc(n.obj)}"><span>${esc(n.obj)}</span></td></tr>`}).join('')}</tbody><tfoot><tr><td colspan="5">Total</td><td class="n">${BRL(L.reduce((a,n)=>a+n.saldo,0))}</td><td colspan="2"></td></tr></tfoot>`;
+  $('tb-gs').innerHTML=`<thead><tr><th>Gestor</th><th>NC recebida</th><th>Data</th><th>ND</th><th>Ramo</th><th class="n">Valor</th><th class="n">Saldo retido</th><th>Prazo</th><th>Objeto</th></tr></thead><tbody>${L.map(n=>{const s=sitOf(n.sit);return `<tr class="clk"><td class="nw"><b>${esc(n.sigla)}</b></td><td class="num nw">${esc(n.nc)}</td><td class="num nw">${esc(n.dia||'')}</td><td class="num">${ndw(n.nd)}</td><td>${RAMO[n.pi]||esc(n.pi)}</td><td class="n">${BRL(n.val)}</td><td class="n"><b>${BRL(n.saldo)}</b></td><td class="nw"><span class="pill ${s[2]}">${s[1]}</span> <span class="num">${DT(n.prazo)}</span></td><td class="obj"><span>${esc(n.obj)}</span></td></tr>`}).join('')}</tbody><tfoot><tr><td colspan="6">${L.length} NC</td><td class="n">${BRL(sum(L,'saldo'))}</td><td colspan="2"></td></tr></tfoot>`;
+  if(tab==='p-gs') setInfo(`<span>Retido <b>${BRL(sum(L,'saldo'))}</b> em ${L.length} NC</span>`,tools('gs'));
+  fit('tb-gs');
 }
-let rPer='';
-function initRC(){
-  const R=D.recebidos||[];
-  const us=[...new Map(R.map(x=>[x.ug,x.sigla])).entries()].sort((a,b)=>a[1].localeCompare(b[1],'pt'));
-  document.getElementById('r-ug').insertAdjacentHTML('beforeend',us.map(([u,s])=>`<option value="${u}">${esc(s)} (${u})</option>`).join(''));
-  document.getElementById('r-per').innerHTML=[['','Todo o período'],['7','Últimos 7 dias'],['30','Últimos 30 dias']].map(([v,l])=>`<button class="chip" aria-pressed="${v===rPer}" data-v="${v}">${l}</button>`).join('');
-  document.querySelectorAll('#r-per .chip').forEach(b=>b.onclick=()=>{rPer=b.dataset.v;document.querySelectorAll('#r-per .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));tRC()});
-  ['r-ug','r-ramo','r-q','r-neg'].forEach(id=>document.getElementById(id).addEventListener('input',tRC));
-  tRC();
-}
-function tRC(){
-  const u=document.getElementById('r-ug').value, r=document.getElementById('r-ramo').value, q=document.getElementById('r-q').value.trim().toUpperCase(), neg=document.getElementById('r-neg').checked;
-  const ref=new Date(D.ref_prazo+'T12:00:00'); const lim=rPer?new Date(ref.getTime()-Number(rPer)*864e5).toISOString().slice(0,10):'';
-  const L=(D.recebidos||[]).filter(x=>(!u||x.ug===u)&&(!r||x.pi.includes(r))&&(neg||x.val>0)&&(!lim||(x.data||'')>=lim)&&(!q||(x.nc+' '+x.nd+' '+x.obj).toUpperCase().includes(q)));
-  const pos=L.filter(x=>x.val>0), ng=L.filter(x=>x.val<0);
-  const sum=(a,f)=>a.reduce((s,x)=>s+(x[f]||0),0);
-  const ult=pos.length?pos[0].data:null;
-  document.getElementById('r-sum').innerHTML=`<span>Recebido <b>${BRL(sum(pos,'val'))}</b> em ${pos.length} NC</span>`+(neg?`<span>Recolhido/anulado <b>${BRL(sum(ng,'val'))}</b></span><span>Líquido <b>${BRL(sum(L,'val'))}</b></span>`:'')+`<span>Saldo estimado das NC listadas <b>${BRL(sum(pos,'saldo'))}</b></span>`+(ult?`<span>Último recebimento <b>${DT(ult)}</b></span>`:'');
-  let last='', rows='';
-  for(const x of L){
-    if(x.data!==last){last=x.data; const n=L.filter(y=>y.data===x.data); rows+=`<tr class="dhead"><td colspan="12">${DT(x.data)} · ${n.length} NC · ${BRL(sum(n,'val'))}</td></tr>`;}
-    const s=x.sit?sitOf(x.sit):null;
-    rows+=`<tr><td class="num">${DT(x.data)}</td><td title="${esc(x.nome)}"><b>${esc(x.sigla)}</b> <span class="muted num">${x.ug}</span></td><td class="num">${esc(x.nc)}</td><td>${esc(x.emit)}</td><td>${x.pi.split('/').map(p=>RAMO[p]||p).join('/')}</td><td class="num">${esc(x.nd)}</td><td>${x.val<0?'<span class="pill p-VENCIDO">'+esc(x.tipo)+'</span>':esc(x.tipo)}</td><td class="n${x.val<0?' neg':''}">${BRL(x.val)}</td><td class="n">${x.vinc==null?'—':BRL(x.vinc)}</td><td class="n">${x.saldo==null?'—':'<b>'+BRL(x.saldo)+'</b>'}</td><td>${s?`<span class="pill ${s[2]}">${s[1]}</span> <span class="num">${DT(x.prazo)}</span>`:'—'}</td><td class="obj" title="${esc(x.obj)}"><span>${esc(x.obj)}</span></td></tr>`;
-  }
-  document.getElementById('tb-rc').innerHTML=`<thead><tr><th>Data</th><th>UASG (OM)</th><th>NC</th><th>Emitente</th><th>Ramo</th><th>ND</th><th>Tipo</th><th class="n">Valor</th><th class="n">Empenhado</th><th class="n">Saldo</th><th>Prazo</th><th>Objeto da NC</th></tr></thead><tbody>${rows||'<tr><td colspan="12" class="muted">Nenhuma NC com esses filtros.</td></tr>'}</tbody><tfoot><tr><td colspan="7">${L.length} lançamentos</td><td class="n">${BRL(sum(L,'val'))}</td><td class="n">${BRL(sum(pos,'vinc'))}</td><td class="n">${BRL(sum(pos,'saldo'))}</td><td colspan="2"></td></tr></tfoot>`;
-}
+/* ---------- Pendências ---------- */
 function tPD(){
-  document.getElementById('tb-pd').innerHTML=`<thead><tr><th>UG</th><th>ND</th><th>Ramo</th><th>Situação do vínculo</th><th>NC citada</th><th class="n">Empenhado</th><th>Histórico do empenho</th></tr></thead><tbody>${D.pend.map(p=>`<tr><td><b>${esc(p.sigla)}</b></td><td class="num">${esc(p.nd)}</td><td>${RAMO[p.pi]||esc(p.pi)}</td><td>${esc(p.tipo.toLowerCase())}</td><td class="num">${esc(p.cit)||'—'}</td><td class="n">${BRL(p.emp)}</td><td class="obj" title="${esc(p.desc)}"><span>${esc(p.desc)}</span></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="5">${D.pend.length} lançamentos</td><td class="n">${BRL(D.pend.reduce((a,p)=>a+p.emp,0))}</td><td></td></tr></tfoot>`;
+  $('tb-pd').innerHTML=`<thead><tr><th>UG</th><th>ND</th><th>Ramo</th><th>Situação do vínculo</th><th>NC citada</th><th class="n">Empenhado</th><th>Histórico do empenho</th></tr></thead><tbody>${D.pend.map(p=>`<tr class="clk">${ugCell(p.sigla,p.ug)}<td class="num">${esc(p.nd)}</td><td>${RAMO[p.pi]||esc(p.pi)}</td><td>${esc(p.tipo.charAt(0)+p.tipo.slice(1).toLowerCase())}</td><td class="num nw">${esc(p.cit)||'—'}</td><td class="n">${BRL(p.emp)}</td><td class="obj"><span>${esc(p.desc)}</span></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="5">${D.pend.length} lançamentos</td><td class="n">${BRL(sum(D.pend,'emp'))}</td><td></td></tr></tfoot>`;
+  if(tab==='p-pd') setInfo(`<span><b>${D.pend.length}</b> empenhos sem NC válida no histórico · <b>${BRL(sum(D.pend,'emp'))}</b></span>`,tools('pd'));
+  fit('tb-pd');
 }
 </script>
 
