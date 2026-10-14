@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="300" viewBox="0 0 1280 300" role="img" aria-label="Fluxo do dado: SIAFI, Tesouro Gerencial, ponte, motor, portão, site">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b1a12"/><stop offset="1" stop-color="#1d3324"/></linearGradient>
+<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e9c46a"/></marker></defs>
+<rect width="1280" height="300" rx="18" fill="url(#bg)"/>
+<text x="40" y="44" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" letter-spacing="4" font-weight="700" fill="#e9c46a">COMO O DADO CHEGA AO SITE</text>
+<text x="1240" y="44" text-anchor="end" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="#8fa89a">todo dia útil · zero toque manual</text>
+<rect x="32" y="76" width="397" height="190" rx="14" fill="#52b788" fill-opacity=".06" stroke="#52b788" stroke-opacity=".35" stroke-dasharray="4 5"/>
+<text x="230" y="252" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" font-weight="600" fill="#52b788">🌙 MADRUGADA · FONTE</text>
+<rect x="442" y="76" width="602" height="190" rx="14" fill="#e9c46a" fill-opacity=".06" stroke="#e9c46a" stroke-opacity=".35" stroke-dasharray="4 5"/>
+<text x="742" y="252" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" font-weight="600" fill="#e9c46a">⚙️ PROCESSAMENTO AUTOMÁTICO</text>
+<rect x="1056" y="76" width="192" height="190" rx="14" fill="#52b788" fill-opacity=".06" stroke="#52b788" stroke-opacity=".35" stroke-dasharray="4 5"/>
+<text x="1152" y="252" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" font-weight="600" fill="#52b788">☀️ MANHÃ · USO</text>
+<rect x="40" y="96" width="176" height="126" rx="14" fill="#1b4332" stroke="#52b788" stroke-width="2"/>
+<text x="128" y="136" text-anchor="middle" font-size="28">🏛️</text>
+<text x="128" y="170" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#d8f3dc">SIAFI</text>
+<text x="128" y="192" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#d8f3dc" fill-opacity=".8">carga diária</text>
+<path d="M219 159H240" stroke="#e9c46a" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="245" y="96" width="176" height="126" rx="14" fill="#1b4332" stroke="#52b788" stroke-width="2"/>
+<text x="333" y="136" text-anchor="middle" font-size="28">📊</text>
+<text x="333" y="170" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#d8f3dc">Tesouro Gerencial</text>
+<text x="333" y="192" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#d8f3dc" fill-opacity=".8">6 relatórios · R1 R2</text>
+<text x="333" y="208" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#d8f3dc" fill-opacity=".8">R3 R5 R6 R7</text>
+<path d="M424 159H445" stroke="#e9c46a" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="450" y="96" width="176" height="126" rx="14" fill="#2d3a2e" stroke="#e9c46a" stroke-width="2"/>
+<text x="538" y="136" text-anchor="middle" font-size="28">🔌</text>
+<text x="538" y="170" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#fefae0">Ponte</text>
+<text x="538" y="192" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#fefae0" fill-opacity=".8">recebe por e-mail,</text>
+<text x="538" y="208" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#fefae0" fill-opacity=".8">grava, dispara</text>
+<path d="M629 159H649" stroke="#e9c46a" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="654" y="96" width="176" height="126" rx="14" fill="#2d3a2e" stroke="#e9c46a" stroke-width="2"/>
+<text x="742" y="136" text-anchor="middle" font-size="28">🧠</text>
+<text x="742" y="170" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#fefae0">Motor</text>
+<text x="742" y="192" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#fefae0" fill-opacity=".8">13 conferências ao</text>
+<text x="742" y="208" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#fefae0" fill-opacity=".8">centavo</text>
+<path d="M833 159H854" stroke="#e9c46a" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="859" y="96" width="176" height="126" rx="14" fill="#2d3a2e" stroke="#e9c46a" stroke-width="2"/>
+<text x="947" y="136" text-anchor="middle" font-size="28">🛡️</text>
+<text x="947" y="170" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#fefae0">Portão</text>
+<text x="947" y="192" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#fefae0" fill-opacity=".8">forma · tamanho ·</text>
+<text x="947" y="208" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#fefae0" fill-opacity=".8">promoção</text>
+<path d="M1038 159H1059" stroke="#e9c46a" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="1064" y="96" width="176" height="126" rx="14" fill="#e9c46a" stroke="#b08900" stroke-width="2"/>
+<text x="1152" y="136" text-anchor="middle" font-size="28">🌐</text>
+<text x="1152" y="170" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1b1b1b">Site no ar</text>
+<text x="1152" y="192" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#1b1b1b" fill-opacity=".8">antes do expediente</text>
+</svg>

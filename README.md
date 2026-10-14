@@ -89,22 +89,7 @@ Destacado → descentralizado → empenhado → liquidado → pago → disponív
 
 ## ⚙️ Como o dado chega ao site
 
-```mermaid
-flowchart LR
-    A[("🏛️ SIAFI<br/>carga diária")] --> B["📊 Tesouro Gerencial<br/>6 relatórios por subscrição<br/>R1 · R2 · R3 · R5 · R6 · R7"]
-    B -->|"e-mail automático<br/>madrugada"| C["🔌 Ponte<br/>grava e dispara"]
-    C --> D["🧠 Rotina de processamento<br/>motor + 13 conferências"]
-    D -->|"branch preparo"| E{"🛡️ Portão<br/>de forma e tamanho"}
-    E -->|"promove ao main"| F["🌐 GitHub Pages<br/>site no ar"]
-    F --> G(["🎖️ Reunião do EM<br/>08h30"])
-
-    classDef src fill:#1b4332,stroke:#52b788,color:#d8f3dc
-    classDef proc fill:#2d3a2e,stroke:#e9c46a,color:#fefae0
-    classDef out fill:#e9c46a,stroke:#b08900,color:#1b1b1b
-    class A,B src
-    class C,D,E proc
-    class F,G out
-```
+<p align="center"><img src="assets/fluxo.svg" alt="Fluxo: SIAFI → Tesouro Gerencial (6 relatórios) → ponte → motor com 13 conferências → portão → site no ar" width="100%"></p>
 
 <div align="center">
 
