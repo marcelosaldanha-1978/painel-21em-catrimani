@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="Painel 21EM — Op CATRIMANI II">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1a12"/>
+      <stop offset=".55" stop-color="#13261b"/>
+      <stop offset="1" stop-color="#1d3324"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e9c46a"/>
+      <stop offset="1" stop-color="#f4a261"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e9c46a" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#52b788" stop-opacity=".95"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity=".035" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="360" fill="url(#bg)"/>
+  <rect width="1280" height="360" fill="url(#grid)"/>
+  <!-- topographic contour lines (Amazônia / Roraima) -->
+  <g fill="none" stroke="#52b788" stroke-opacity=".10" stroke-width="1.5">
+    <path d="M760 360 C820 280 900 300 960 240 S1100 180 1280 210"/>
+    <path d="M700 360 C780 260 880 270 940 200 S1090 130 1280 160"/>
+    <path d="M640 360 C740 240 860 240 920 160 S1080 80 1280 110"/>
+    <path d="M600 360 C700 220 840 210 900 120 S1070 30 1280 60"/>
+  </g>
+  <rect x="0" y="0" width="8" height="360" fill="url(#gold)"/>
+
+  <!-- title block -->
+  <text x="64" y="86" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="17" letter-spacing="5" fill="#e9c46a" font-weight="600">D10 · FINANÇAS · OPERAÇÃO CATRIMANI II</text>
+  <text x="62" y="160" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">Painel <tspan fill="url(#gold)">21EM</tspan></text>
+  <text x="64" y="204" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="24" fill="#d8e2dc">Situação dos créditos orçamentários, do MD ao pagamento</text>
+  <g font-family="Consolas, Menlo, monospace" font-size="15" fill="#95d5b2">
+    <rect x="64" y="232" rx="14" width="132" height="28" fill="#52b788" fill-opacity=".14" stroke="#52b788" stroke-opacity=".5"/>
+    <text x="130" y="251" text-anchor="middle">AO 21EM</text>
+    <rect x="206" y="232" rx="14" width="168" height="28" fill="#52b788" fill-opacity=".14" stroke="#52b788" stroke-opacity=".5"/>
+    <text x="290" y="251" text-anchor="middle">PTRES 251050</text>
+    <rect x="384" y="232" rx="14" width="200" height="28" fill="#52b788" fill-opacity=".14" stroke="#52b788" stroke-opacity=".5"/>
+    <text x="484" y="251" text-anchor="middle">PO 0003 · CHOC/EMCFA</text>
+  </g>
+  <text x="64" y="306" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" fill="#8fa89a">Tesouro Gerencial → conferência ao centavo → site, todo dia útil, sem toque manual</text>
+
+  <!-- resource chain -->
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="700" text-anchor="middle">
+    <g stroke="url(#flow)" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M760 110 H860"/>
+      <path d="M920 110 H1000"/>
+      <path d="M1060 110 C1110 110 1110 70 1150 70"/>
+      <path d="M1060 110 H1150"/>
+      <path d="M1060 110 C1110 110 1110 150 1150 150"/>
+      <path d="M1175 176 V238" stroke="#52b788" stroke-dasharray="2 6"/>
+    </g>
+    <g filter="url(#glow)">
+      <circle cx="730" cy="110" r="30" fill="#e9c46a"/>
+      <circle cx="890" cy="110" r="30" fill="#e2b85a"/>
+      <circle cx="1030" cy="110" r="30" fill="#c9b458"/>
+      <circle cx="1175" cy="70"  r="24" fill="#74c69d"/>
+      <circle cx="1175" cy="110" r="24" fill="#74c69d"/>
+      <circle cx="1175" cy="150" r="24" fill="#74c69d"/>
+    </g>
+    <g font-size="14" fill="#0b1a12">
+      <text x="730" y="115">MD</text>
+      <text x="890" y="115">DCont</text>
+      <text x="1030" y="115">EME</text>
+    </g>
+    <g font-size="10.5" fill="#0b1a12">
+      <text x="1175" y="74">COTER</text>
+      <text x="1175" y="114">COEx</text>
+      <text x="1175" y="154">DGO</text>
+    </g>
+    <g>
+      <rect x="1095" y="244" width="160" height="40" rx="10" fill="#52b788" fill-opacity=".18" stroke="#52b788"/>
+      <text x="1175" y="270" font-size="15" fill="#d8f3dc">OM executoras</text>
+    </g>
+    <g font-size="11" font-weight="500" fill="#8fa89a">
+      <text x="730" y="162">destaque</text>
+      <text x="890" y="162">destaque</text>
+      <text x="1030" y="162">provisão</text>
+    </g>
+  </g>
+</svg>
